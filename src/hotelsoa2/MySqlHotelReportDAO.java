@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author mdeboer1
  */
-public class HotelReportDAO {
+public class MySqlHotelReportDAO implements HotelDAOStrategy {
     
     private DatabaseAccessorStrategy database;
     
@@ -26,7 +26,7 @@ public class HotelReportDAO {
      * @throws InstantiationException
      * @throws IllegalAccessException 
      */
-    public HotelReportDAO() throws ClassNotFoundException, InstantiationException,
+    public MySqlHotelReportDAO() throws ClassNotFoundException, InstantiationException,
             IllegalAccessException{
         try {
             this.database = MySqlDatabaseFactory.getAccessor();
@@ -36,8 +36,9 @@ public class HotelReportDAO {
         }
     }
     
+    @Override
     public final List<Hotel> getHotelRecords(String tableName) throws 
-            SQLException, IOException, ClassNotFoundException{
+            SQLException, IOException, ClassNotFoundException, NullPointerException{
         
         List<Map<String, Object>> records = null;
 
@@ -48,9 +49,7 @@ public class HotelReportDAO {
             //throw to caller
         }
         List<Hotel> list = new ArrayList<>();
-                System.out.println("hello");
         for (Map<String,Object> map : records){
-                    System.out.println("hello");
             Object obj = map.get("hotel_id");
             String id = obj == null ? "Test" : obj.toString();
             int hotelId = Integer.parseInt(id);
@@ -68,14 +67,13 @@ public class HotelReportDAO {
                     hotelState, hotelZip);
             list.add(hotel);
         }
-        System.out.println("hello");
         return list;
     }
     
     public static void main(String[] args){
         List<Hotel> list = null;
         try {
-            HotelReportDAO dao = new HotelReportDAO();
+            MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
             list = dao.getHotelRecords("hotels");
         } catch (ClassNotFoundException | SQLException | IOException | 
                 NullPointerException | InstantiationException  |

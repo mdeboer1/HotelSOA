@@ -71,6 +71,28 @@ public final class MySqlDatabaseFactory {
         }
         return dBStrategy;
     }
+    
+    public static HotelDAOStrategy getDAO()throws ClassNotFoundException, 
+            InstantiationException, IllegalAccessException, IOException{
+        
+        HotelDAOStrategy dAOStrategy = null;
+        File file = new File(filePath);
+        Properties prop = new Properties();
+        FileInputStream input;
+        try{
+            input = new FileInputStream(file);
+            prop.load(input);
+            input.close();
+            
+            String strategy = prop.getProperty("db.dao");
+            Class c = Class.forName(strategy);
+            dAOStrategy = (HotelDAOStrategy)c.newInstance();
+        }catch(IOException | ClassNotFoundException | InstantiationException 
+                | IllegalAccessException ex){
+            
+        }
+        return dAOStrategy;
+    }
 //    
     public static void main(String[] args) {
 //        Connection conn = null;
@@ -80,15 +102,27 @@ public final class MySqlDatabaseFactory {
 //            Logger.getLogger(MySqlDatabaseFactory.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        System.out.println(conn.toString());
-        DatabaseAccessorStrategy db = null;
+//        DatabaseAccessorStrategy db = null;
+//        try {
+//            db = MySqlDatabaseFactory.getAccessor();
+//            if (db == null){
+//                System.out.println("oops");
+//            }
+//        } catch(ClassNotFoundException |
+//            InstantiationException | IllegalAccessException e){
+//            
+//        }
+        
+        HotelDAOStrategy dao = null;
         try {
-            db = MySqlDatabaseFactory.getAccessor();
-            if (db == null){
-                System.out.println("oops");
-            }
-        } catch(ClassNotFoundException |
-            InstantiationException | IllegalAccessException e){
+            dao = MySqlDatabaseFactory.getDAO();
+        }catch (IOException | ClassNotFoundException | InstantiationException 
+                | IllegalAccessException ex) {
             
         }
+        if (dao == null){
+            System.out.println("null");
+        }
+//        System.out.println(dao.toString());
         }
 }
