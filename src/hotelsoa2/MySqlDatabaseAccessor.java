@@ -34,7 +34,7 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
     
     @Override
     public final void openConnection() throws IOException, SQLException, ClassNotFoundException{
-        connection = DatabaseFactory.getConnection();
+        connection = MySqlDatabaseFactory.getConnection();
 //        System.out.println(connection.toString());
 //        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/hotel",
 //                "root", "admin");

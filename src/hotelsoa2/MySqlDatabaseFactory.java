@@ -12,19 +12,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author mdeboer1
  */
-public final class DatabaseFactory {
+public final class MySqlDatabaseFactory {
     public static String filePath 
             = "src" + File.separatorChar + "config.properties";
     public static String connectionClass = "db.connector";
     
-    private DatabaseFactory(){
+    private MySqlDatabaseFactory(){
     }
     
     
@@ -51,14 +49,46 @@ public final class DatabaseFactory {
         }
         return connection;
     }
+    
+    public static DatabaseAccessorStrategy getAccessor()throws ClassNotFoundException, 
+            InstantiationException, IllegalAccessException{
+        
+        DatabaseAccessorStrategy dBStrategy = null;
+        File file = new File(filePath);
+        Properties prop = new Properties();
+        FileInputStream input;
+        try{
+            input = new FileInputStream(file);
+            prop.load(input);
+            input.close();
+            
+            String strategy = prop.getProperty("db.accessor");
+            Class c = Class.forName(strategy);
+            dBStrategy = (DatabaseAccessorStrategy)c.newInstance();
+        } catch(IOException | ClassNotFoundException | InstantiationException 
+                | IllegalAccessException ex){
+            
+        }
+        return dBStrategy;
+    }
 //    
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        Connection conn = null;
 //        try {
-//            conn = DatabaseFactory.getConnection();
+//            conn = MySqlDatabaseFactory.getConnection();
 //        } catch (IOException | SQLException | ClassNotFoundException ex) {
-//            Logger.getLogger(DatabaseFactory.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(MySqlDatabaseFactory.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        System.out.println(conn.toString());
-//    }
+        DatabaseAccessorStrategy db = null;
+        try {
+            db = MySqlDatabaseFactory.getAccessor();
+            if (db == null){
+                System.out.println("oops");
+            }
+        } catch(ClassNotFoundException |
+            InstantiationException | IllegalAccessException e){
+            
+        }
+        }
 }
