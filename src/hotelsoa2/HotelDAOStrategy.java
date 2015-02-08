@@ -18,4 +18,7 @@ public interface HotelDAOStrategy {
     public abstract List<Hotel> getHotelRecords(String tableName) throws 
             SQLException, IOException, ClassNotFoundException;
     
+    public abstract Hotel getOneHotelRecordById(int hotelId, String tableName)
+        throws IOException, SQLException, ClassNotFoundException;
+    
 }

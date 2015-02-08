@@ -19,10 +19,17 @@ public interface DatabaseAccessorStrategy {
 
     public abstract void closeConnection() throws SQLException;
 
-    public abstract List<Map<String, Object>> getHotelRecords(String tableName) 
+    public abstract List<Map<String, Object>> getAllHotelRecords(String tableName) 
             throws SQLException, IOException, ClassNotFoundException;
 
     public abstract void openConnection() throws IOException, 
             SQLException, ClassNotFoundException;
+    
+    public abstract void updateOneHotelRecordColumnById(String tableName,  String columnToUpdate, 
+            String newValue, int hotelId) throws IOException, 
+            SQLException, ClassNotFoundException;
+    
+    public abstract List<Map<String, Object>> getOneHotelRecordById(int hotelId, String
+            tableName) throws IOException, SQLException, ClassNotFoundException;
     
 }

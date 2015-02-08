@@ -20,7 +20,7 @@ public class Hotel {
 
     public Hotel(int hotelId, String hotelName, String address, String city, String state, String zip) {
         setHotelId(hotelId);
-        setName(name);
+        setName(hotelName);
         setAddress(address);
         setCity(city);
         setState(state);
@@ -39,8 +39,8 @@ public class Hotel {
         return name;
     }
     
-    private void setName(String name){
-        this.name = name;
+    private void setName(String hotelName){
+        this.name = hotelName;
     }
 
     public final String getAddress() {
@@ -98,9 +98,13 @@ public class Hotel {
     }
 
     @Override
-    public final String toString() {
-        return "Hotel{" + "hotelId=" + hotelId + ", address=" + address + ", city=" + city + ", state=" + state + ", zip=" + zip + '}';
+    public String toString() {
+        return "Hotel{" + "hotelId=" + hotelId + ", name=" + name + ", address="
+                + address + ", city=" + city + ", state=" + state + ", zip=" 
+                + zip + '}';
     }
+
+    
     
     
 }

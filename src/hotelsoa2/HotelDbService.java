@@ -38,18 +38,40 @@ public class HotelDbService {
         return records;
     }
     
+    public final Hotel retrieveHotelById(int hotelId, String tableName)
+        throws IOException, SQLException, ClassNotFoundException,
+            NullPointerException {
+        Hotel hotel = null;
+        
+        try {
+            hotel = dao.getOneHotelRecordById(hotelId, tableName);
+        }catch(IOException | SQLException | NullPointerException |
+                ClassNotFoundException e){
+            
+        }
+        return hotel;
+    }
+    
     public static void main(String[] args) {
-        HotelDbService service;
-        List<Hotel> list = null;
+        HotelDbService service = null;
+//        List<Hotel> list = null;
+//        try {
+//            service = new HotelDbService();
+//            list = service.retrieveHotels("hotels");
+//        } catch (ClassNotFoundException | SQLException | IOException | 
+//                NullPointerException ex){
+//            System.out.println("Oops");
+//        }
+//        for(Hotel h : list){
+//            System.out.println(h.toString());
+//        }
+        Hotel hotel = null;
         try {
             service = new HotelDbService();
-            list = service.retrieveHotels("hotels");
-        } catch (ClassNotFoundException | SQLException | IOException | 
-                NullPointerException ex){
-            System.out.println("Oops");
+            hotel = service.retrieveHotelById(2, "hotels");
+        }catch(IOException | SQLException | ClassNotFoundException e){
+            
         }
-        for(Hotel h : list){
-            System.out.println(h.toString());
-        }
+        System.out.println(hotel.toString());
     }
 }
