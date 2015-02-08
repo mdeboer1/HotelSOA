@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -100,21 +102,39 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
         return hotel;
     }    
     
-    public static void main(String[] args){
-//        List<Hotel> list = null;
-        Hotel hotel = null;
+    public final void deleteHotelById(int hotelId) throws IOException, 
+            SQLException, ClassNotFoundException{
+        
         try {
-            MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
-            hotel = dao.getOneHotelRecordById(2, "hotels");
-        } catch (ClassNotFoundException | SQLException | IOException | 
-                NullPointerException | InstantiationException  |
-                        IllegalAccessException ex){
-            System.out.println("oops");
+            database.deleteHotelById(hotelId);
+        }catch(IOException | SQLException | ClassNotFoundException e){
+            
         }
-//        for (Hotel h : list){
-//            System.out.println(h.toString());
+    }
+    
+    
+    public static void main(String[] args) throws ClassNotFoundException, 
+            InstantiationException, IllegalAccessException{
+//        List<Hotel> list = null;
+//        Hotel hotel = null;
+//        try {
+//            MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
+//            hotel = dao.getOneHotelRecordById(2, "hotels");
+//        } catch (ClassNotFoundException | SQLException | IOException | 
+//                NullPointerException | InstantiationException  |
+//                        IllegalAccessException ex){
+//            System.out.println("oops");
 //        }
-        System.out.println(hotel.toString());
+////        for (Hotel h : list){
+////            System.out.println(h.toString());
+////        }
+//        System.out.println(hotel.toString());
+        MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
+        try {
+            dao.deleteHotelById(1);
+        } catch (IOException | SQLException ex) {
+            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 }

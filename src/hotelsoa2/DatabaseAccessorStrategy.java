@@ -32,4 +32,7 @@ public interface DatabaseAccessorStrategy {
     public abstract List<Map<String, Object>> getOneHotelRecordById(int hotelId, String
             tableName) throws IOException, SQLException, ClassNotFoundException;
     
+    public abstract void deleteHotelById(int hotelId) throws IOException, 
+            SQLException, ClassNotFoundException;
+    
 }

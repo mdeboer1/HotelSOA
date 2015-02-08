@@ -111,6 +111,21 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
         }
     
     @Override
+    public final void deleteHotelById(int hotelId) throws IOException, SQLException, ClassNotFoundException{
+        openConnection();
+        
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException ex){
+            
+        }
+        
+        String deleteStatement = "DELETE FROM hotels WHERE hotel_id = " + hotelId;
+        statement.executeUpdate(deleteStatement);
+        closeConnection();
+    }
+    
+    @Override
     public final void updateOneHotelRecordColumnById(String tableName,  
             String columnToUpdate, String newValue, int hotelId) throws 
             IOException, SQLException, ClassNotFoundException{
@@ -175,9 +190,10 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
 //        for (Map<String,Object> record : list){
 //            System.out.println(record.toString());
 //        }
-        List<Map<String, Object>> list = accessor.getOneHotelRecordById(1, "hotels");
-        for (Map<String,Object> record : list){
-            System.out.println(record.toString());
-        }
+//        List<Map<String, Object>> list = accessor.getOneHotelRecordById(1, "hotels");
+//        for (Map<String,Object> record : list){
+//            System.out.println(record.toString());
+        accessor.deleteHotelById(1);
+//        }
     }
 }

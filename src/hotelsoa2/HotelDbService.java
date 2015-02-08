@@ -8,6 +8,8 @@ package hotelsoa2;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -52,8 +54,18 @@ public class HotelDbService {
         return hotel;
     }
     
+    public final void deleteHotelById(int hotelId)throws IOException, 
+            SQLException, ClassNotFoundException{
+        try {
+            dao.deleteHotelById(hotelId);
+        } catch (IOException | SQLException | ClassNotFoundException ex) {
+           
+        }
+    }
+    
     public static void main(String[] args) {
-        HotelDbService service = null;
+        try {
+            HotelDbService service = null;
 //        List<Hotel> list = null;
 //        try {
 //            service = new HotelDbService();
@@ -65,13 +77,18 @@ public class HotelDbService {
 //        for(Hotel h : list){
 //            System.out.println(h.toString());
 //        }
-        Hotel hotel = null;
-        try {
+//        Hotel hotel = null;
+//        try {
+//            service = new HotelDbService();
+//            hotel = service.retrieveHotelById(2, "hotels");
+//        }catch(IOException | SQLException | ClassNotFoundException e){
+//            
+//        }
+//        System.out.println(hotel.toString());
             service = new HotelDbService();
-            hotel = service.retrieveHotelById(2, "hotels");
-        }catch(IOException | SQLException | ClassNotFoundException e){
-            
+            service.deleteHotelById(1);
+        } catch (IOException | SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println(hotel.toString());
     }
 }
