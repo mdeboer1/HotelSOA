@@ -102,6 +102,7 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
         return hotel;
     }    
     
+    @Override
     public final void deleteHotelById(int hotelId) throws IOException, 
             SQLException, ClassNotFoundException{
         
@@ -112,10 +113,20 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
         }
     }
     
+    @Override
+    public final void addHotel(Hotel hotel) throws IOException, SQLException, 
+            ClassNotFoundException{
+        try {
+            database.insertNewHotel(hotel);
+        }catch (IOException | SQLException | ClassNotFoundException e){
+            
+        }
+    }
     
     public static void main(String[] args) throws ClassNotFoundException, 
             InstantiationException, IllegalAccessException{
-//        List<Hotel> list = null;
+        try {
+            //        List<Hotel> list = null;
 //        Hotel hotel = null;
 //        try {
 //            MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
@@ -129,9 +140,15 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
 ////            System.out.println(h.toString());
 ////        }
 //        System.out.println(hotel.toString());
-        MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
-        try {
-            dao.deleteHotelById(1);
+            MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
+//        try {
+//            dao.deleteHotelById(1);
+//        } catch (IOException | SQLException ex) {
+//            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+            Hotel hotel = new Hotel(5, "Hotel5", "159 Here", "Oconomowoc", "WI",
+                    "53066");
+            dao.addHotel(hotel);
         } catch (IOException | SQLException ex) {
             Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

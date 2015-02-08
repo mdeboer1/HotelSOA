@@ -6,6 +6,7 @@
 package hotelsoa2;
 
 import java.io.IOException;
+import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -34,5 +35,10 @@ public interface DatabaseAccessorStrategy {
     
     public abstract void deleteHotelById(int hotelId) throws IOException, 
             SQLException, ClassNotFoundException;
+    
+    public abstract void insertNewHotel(Hotel hotel) throws IOException, 
+            SQLException, ClassNotFoundException, BatchUpdateException;
+    
+    
     
 }

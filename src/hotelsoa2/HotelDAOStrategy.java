@@ -24,4 +24,7 @@ public interface HotelDAOStrategy {
     public abstract void deleteHotelById(int hotelId) throws IOException, 
             SQLException, ClassNotFoundException;
     
+    public abstract void addHotel(Hotel hotel) throws IOException, SQLException, 
+            ClassNotFoundException;
+    
 }

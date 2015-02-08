@@ -63,9 +63,20 @@ public class HotelDbService {
         }
     }
     
+    public final void addHotel(Hotel hotel)throws IOException, SQLException,
+            ClassNotFoundException{
+        try {
+            dao.addHotel(hotel);
+        } catch (IOException | SQLException | ClassNotFoundException ex) {
+            
+        }
+    }
     public static void main(String[] args) {
         try {
-            HotelDbService service = null;
+            HotelDbService service = new HotelDbService();
+            Hotel hotel = new Hotel(6, "Hotel6", "357 There", "Oconomowoc", "WI",
+                    "53066");
+            service.addHotel(hotel);
 //        List<Hotel> list = null;
 //        try {
 //            service = new HotelDbService();

@@ -2,6 +2,7 @@ package hotelsoa2;
 
 
 import java.io.IOException;
+import java.sql.BatchUpdateException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -171,11 +172,42 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
         }
     }
     
-       
+    @Override
+    public final void insertNewHotel(Hotel hotel) throws IOException, 
+            SQLException, ClassNotFoundException, BatchUpdateException{
+        openConnection();
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            
+            
+            statement.addBatch("INSERT INTO hotels (hotel_name, hotel_address, "
+                    + "hotel_city, hotel_state, hotel_zip) values ('"
+                    + hotel.getHotelName() + "', '" + hotel.getAddress() + "', '"
+                    + hotel.getCity() + "', '" + hotel.getState() + "', '" +
+                    hotel.getZip() + "')");
+            statement.executeBatch();
+            connection.commit();
+        } catch (BatchUpdateException b){
+            
+        } catch (SQLException e){
+            
+        } finally {
+            if (statement != null) {
+                statement.close();
+                connection.setAutoCommit(true);
+            }
+        }
+        
+    }
+          
     public static void main(String[] args) throws SQLException, IOException, 
             ClassNotFoundException {
         
         DatabaseAccessorStrategy accessor = new MySqlDatabaseAccessor();
+        Hotel hotel = new Hotel(4, "Hotel4", "789 Hometown", "Oconomowoc", "WI", 
+            "53066");
+        accessor.insertNewHotel(hotel);
 //        list = accessor.getAllHotelRecords("hotels");
 //        for (Map<String,Object> record : list){
 //            System.out.println(record.toString());
@@ -193,7 +225,7 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
 //        List<Map<String, Object>> list = accessor.getOneHotelRecordById(1, "hotels");
 //        for (Map<String,Object> record : list){
 //            System.out.println(record.toString());
-        accessor.deleteHotelById(1);
+//        accessor.deleteHotelById(1);
 //        }
     }
 }
