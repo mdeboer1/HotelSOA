@@ -8,6 +8,7 @@ package hotelsoa2;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -123,10 +124,34 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
         }
     }
     
+    @Override
+    public final void addHotels(List<Hotel> list) throws IOException, SQLException,
+            ClassNotFoundException{
+        
+        Map<String, Object> map = new LinkedHashMap<>();
+        
+        List<Map<String, Object>> hotelList = new ArrayList<>();
+        
+        for (Hotel hotel : list){
+            map.put("hotel_name", hotel.getHotelName());
+            map.put("hotel_address", hotel.getAddress());
+            map.put("hotel_city", hotel.getCity());
+            map.put("hotel_state", hotel.getState());
+            map.put("hotel_Zip", hotel.getZip());
+            hotelList.add(map);
+        }
+
+        try{
+            database.insertNewHotels(hotelList);
+        }catch(IOException | SQLException | ClassNotFoundException e){
+            
+        }    
+    }
+    
     public static void main(String[] args) throws ClassNotFoundException, 
             InstantiationException, IllegalAccessException{
-        try {
-            //        List<Hotel> list = null;
+//        try {
+            //        List<Hotel> hotelList = null;
 //        Hotel hotel = null;
 //        try {
 //            MySqlHotelReportDAO dao = new MySqlHotelReportDAO();
@@ -136,7 +161,7 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
 //                        IllegalAccessException ex){
 //            System.out.println("oops");
 //        }
-////        for (Hotel h : list){
+////        for (Hotel h : hotelList){
 ////            System.out.println(h.toString());
 ////        }
 //        System.out.println(hotel.toString());
@@ -146,12 +171,27 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
 //        } catch (IOException | SQLException ex) {
 //            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-            Hotel hotel = new Hotel(5, "Hotel5", "159 Here", "Oconomowoc", "WI",
+            Hotel hotel1 = new Hotel(7, "Hotel7", "159 Here", "Oconomowoc", "WI",
                     "53066");
-            dao.addHotel(hotel);
-        } catch (IOException | SQLException ex) {
-            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            Hotel hotel2 = new Hotel(8, "Hotel8", "357 Yellow", "Oconomowoc", "WI",
+                    "53066");
+            Hotel hotel3 = new Hotel(9, "Hotel9", "654 White", "Oconomowoc", "WI",
+                    "53066");
+            List<Hotel> list = new ArrayList<>();
+            list.add(hotel1);
+            list.add(hotel2);
+            list.add(hotel3);
+//            System.out.println(list.size());
+            
+            try {
+                dao.addHotels(list);
+//            dao.addHotel(hotel);
+//        } catch (IOException | SQLException ex) {
+//            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+            } catch (IOException | SQLException ex) {
+                Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
     }
 }

@@ -198,16 +198,71 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
                 connection.setAutoCommit(true);
             }
         }
-        
     }
-          
+    
+    @Override
+    public final void insertNewHotels(List<Map<String, Object>> hotelList) 
+            throws IOException, SQLException, ClassNotFoundException,
+            BatchUpdateException{
+        openConnection();
+        try {
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            for (Map m : hotelList){
+                statement.addBatch("INSERT INTO hotels (hotel_name, hotel_address, "
+                    + "hotel_city, hotel_state, hotel_zip) values ('" + 
+                        m.get("hotel_name") + "', '" + m.get("hotel_address") +
+                        "', '" + m.get("hotel_city") + "', '" + m.get("hotel_state") 
+                        + "', '" + m.get("hotel_zip") + "')");
+            }
+            statement.executeBatch();
+            connection.commit();
+        }catch (BatchUpdateException b){
+            
+            } catch (SQLException e){
+            
+            } finally {
+            
+                if (statement != null) {
+                    statement.close();
+                    connection.setAutoCommit(true);
+                }
+            }
+    }
+        
     public static void main(String[] args) throws SQLException, IOException, 
             ClassNotFoundException {
         
         DatabaseAccessorStrategy accessor = new MySqlDatabaseAccessor();
-        Hotel hotel = new Hotel(4, "Hotel4", "789 Hometown", "Oconomowoc", "WI", 
+        Hotel hotel1 = new Hotel(6, "Hotel9", "852 South", "Oconomowoc", "WI", 
             "53066");
-        accessor.insertNewHotel(hotel);
+        Hotel hotel2 = new Hotel(7, "Hotel0", "258 Yellow", "Oconomowoc", "WI", 
+            "53066");
+        Hotel hotel3 = new Hotel(8, "Hotel11", "321 White", "Oconomowoc", "WI", 
+            "53066");
+//        accessor.insertNewHotel(hotel);
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("hotel_name", (Object)hotel1.getHotelName());
+        map.put("hotel_address", (Object)hotel1.getAddress());
+        map.put("hotel_city", (Object)hotel1.getCity());
+        map.put("hotel_state", (Object)hotel1.getState());
+        map.put("hotel_Zip", (Object)hotel1.getZip());
+        
+        map.put("hotel_name", (Object)hotel2.getHotelName());
+        map.put("hotel_address", (Object)hotel2.getAddress());
+        map.put("hotel_city", (Object)hotel2.getCity());
+        map.put("hotel_state", (Object)hotel2.getState());
+        map.put("hotel_Zip", (Object)hotel2.getZip());
+        
+        map.put("hotel_name", hotel3.getHotelName());
+        map.put("hotel_address", hotel3.getAddress());
+        map.put("hotel_city", hotel3.getCity());
+        map.put("hotel_state", hotel3.getState());
+        map.put("hotel_Zip", hotel3.getZip());
+//        System.out.println(hotel3.getHotelName());
+        List<Map<String, Object>> list = new ArrayList<>();
+        list.add(map);
+        accessor.insertNewHotels(list);
 //        list = accessor.getAllHotelRecords("hotels");
 //        for (Map<String,Object> record : list){
 //            System.out.println(record.toString());

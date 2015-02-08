@@ -7,6 +7,7 @@ package hotelsoa2;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -71,34 +72,35 @@ public class HotelDbService {
             
         }
     }
+    public final void addHotels(List<Hotel> list) throws IOException, 
+            SQLException, ClassNotFoundException{
+        try {
+            dao.addHotels(list);
+        } catch (IOException | SQLException | ClassNotFoundException e){
+            
+        }
+    }
+    
     public static void main(String[] args) {
         try {
             HotelDbService service = new HotelDbService();
-            Hotel hotel = new Hotel(6, "Hotel6", "357 There", "Oconomowoc", "WI",
+            Hotel hotel1 = new Hotel(7, "Hotel7", "159 Here", "Oconomowoc", "WI",
                     "53066");
-            service.addHotel(hotel);
-//        List<Hotel> list = null;
-//        try {
-//            service = new HotelDbService();
-//            list = service.retrieveHotels("hotels");
-//        } catch (ClassNotFoundException | SQLException | IOException | 
-//                NullPointerException ex){
-//            System.out.println("Oops");
-//        }
-//        for(Hotel h : list){
-//            System.out.println(h.toString());
-//        }
-//        Hotel hotel = null;
-//        try {
-//            service = new HotelDbService();
-//            hotel = service.retrieveHotelById(2, "hotels");
-//        }catch(IOException | SQLException | ClassNotFoundException e){
-//            
-//        }
-//        System.out.println(hotel.toString());
-            service = new HotelDbService();
-            service.deleteHotelById(1);
-        } catch (IOException | SQLException | ClassNotFoundException ex) {
+            Hotel hotel2 = new Hotel(8, "Hotel8", "357 Yellow", "Oconomowoc", "WI",
+                    "53066");
+            Hotel hotel3 = new Hotel(9, "Hotel9", "654 White", "Oconomowoc", "WI",
+                    "53066");
+            List<Hotel> list = new ArrayList<>();
+            list.add(hotel1);
+            list.add(hotel2);
+            list.add(hotel3);
+            service.addHotels(list);
+
+        } catch (IOException ex) {
+            Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

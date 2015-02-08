@@ -39,6 +39,8 @@ public interface DatabaseAccessorStrategy {
     public abstract void insertNewHotel(Hotel hotel) throws IOException, 
             SQLException, ClassNotFoundException, BatchUpdateException;
     
-    
+    public abstract void insertNewHotels(List<Map<String, Object>> hotelList) 
+            throws IOException, SQLException, ClassNotFoundException,
+            BatchUpdateException;
     
 }
