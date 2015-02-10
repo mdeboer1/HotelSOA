@@ -111,6 +111,27 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
         return hotelRecord;
         }
     
+    public final int getHotelRecordCount() throws IOException, SQLException, ClassNotFoundException{
+        
+        openConnection();
+        int hotelCount = 0;
+        
+        try{
+            statement = connection.createStatement();
+        } catch (SQLException ex){
+            
+        }
+        
+        String sqlStatement = "SELECT count(*) from hotels";
+        result = statement.executeQuery(sqlStatement);
+        while(result.next()){
+            hotelCount = result.getInt(1);
+        }
+        
+        closeConnection();
+        return hotelCount;
+    }
+    
     @Override
     public final void deleteHotelById(int hotelId) throws IOException, SQLException, ClassNotFoundException{
         openConnection();
