@@ -7,10 +7,8 @@ package hotelsoa2;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -81,27 +79,13 @@ public class HotelDbService {
         }
     }
     
-    public static void main(String[] args) {
-        try {
-            HotelDbService service = new HotelDbService();
-            Hotel hotel1 = new Hotel(7, "Hotel7", "159 Here", "Oconomowoc", "WI",
-                    "53066");
-            Hotel hotel2 = new Hotel(8, "Hotel8", "357 Yellow", "Oconomowoc", "WI",
-                    "53066");
-            Hotel hotel3 = new Hotel(9, "Hotel9", "654 White", "Oconomowoc", "WI",
-                    "53066");
-            List<Hotel> list = new ArrayList<>();
-            list.add(hotel1);
-            list.add(hotel2);
-            list.add(hotel3);
-            service.addHotels(list);
-
-        } catch (IOException ex) {
-            Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public final void updateOneHotelRecordColumnById(String tableName,  
+            String columnToUpdate, String newValue, int hotelId) throws 
+            IOException, SQLException, ClassNotFoundException{
+        try{
+            dao.updateOneHotelRecordColumnById(tableName, columnToUpdate, newValue, hotelId);
+        } catch (IOException | SQLException | ClassNotFoundException e)  {
+            
+        }  
     }
 }

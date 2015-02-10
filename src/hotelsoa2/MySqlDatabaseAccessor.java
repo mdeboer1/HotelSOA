@@ -152,27 +152,18 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
             String columnToUpdate, String newValue, int hotelId) throws 
             IOException, SQLException, ClassNotFoundException{
         openConnection();
-//        String updateStatement = "update " + tableName + " set " + columnToUpdate +
-//                " = " + newValue + " where hotel_id = " + hotelId;
-//        try {
-//            statement = connection.createStatement();
-//        } catch (SQLException ex) {
-//
-//        }
-//        statement.executeUpdate(updateStatement);
-//        closeConnection();
+
         PreparedStatement updateRecord = null;
         // update hotels set hotel_name = "hotel3" where hotel_id = 1;
         // update tableName set columnToUpdate = newValue where hotel_id = hotelId
-        String updateString = "update ? set ? = ? where hotel_id = ?";
+        String updateString = "update " + tableName + " set " + columnToUpdate +
+                " = ? where hotel_id = ?";
         try {
-            System.out.println("here");
+           
             connection.setAutoCommit(false);
             updateRecord = connection.prepareStatement(updateString);
-            updateRecord.setString(1, tableName);
-            updateRecord.setString(2, columnToUpdate);
-            updateRecord.setString(3, newValue);
-            updateRecord.setInt(4, hotelId);
+            updateRecord.setString(1, newValue);
+            updateRecord.setInt(2, hotelId);
             updateRecord.executeUpdate();
             connection.commit();
         } catch (SQLException e){
@@ -249,59 +240,5 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
                     connection.setAutoCommit(true);
                 }
             }
-    }
-        
-    public static void main(String[] args) throws SQLException, IOException, 
-            ClassNotFoundException {
-        
-        DatabaseAccessorStrategy accessor = new MySqlDatabaseAccessor();
-        Hotel hotel1 = new Hotel(6, "Hotel9", "852 South", "Oconomowoc", "WI", 
-            "53066");
-        Hotel hotel2 = new Hotel(7, "Hotel0", "258 Yellow", "Oconomowoc", "WI", 
-            "53066");
-        Hotel hotel3 = new Hotel(8, "Hotel11", "321 White", "Oconomowoc", "WI", 
-            "53066");
-//        accessor.insertNewHotel(hotel);
-        Map<String, Object> map = new LinkedHashMap<>();
-        map.put("hotel_name", (Object)hotel1.getHotelName());
-        map.put("hotel_address", (Object)hotel1.getAddress());
-        map.put("hotel_city", (Object)hotel1.getCity());
-        map.put("hotel_state", (Object)hotel1.getState());
-        map.put("hotel_Zip", (Object)hotel1.getZip());
-        
-        map.put("hotel_name", (Object)hotel2.getHotelName());
-        map.put("hotel_address", (Object)hotel2.getAddress());
-        map.put("hotel_city", (Object)hotel2.getCity());
-        map.put("hotel_state", (Object)hotel2.getState());
-        map.put("hotel_Zip", (Object)hotel2.getZip());
-        
-        map.put("hotel_name", hotel3.getHotelName());
-        map.put("hotel_address", hotel3.getAddress());
-        map.put("hotel_city", hotel3.getCity());
-        map.put("hotel_state", hotel3.getState());
-        map.put("hotel_Zip", hotel3.getZip());
-//        System.out.println(hotel3.getHotelName());
-        List<Map<String, Object>> list = new ArrayList<>();
-        list.add(map);
-        accessor.insertNewHotels(list);
-//        list = accessor.getAllHotelRecords("hotels");
-//        for (Map<String,Object> record : list){
-//            System.out.println(record.toString());
-//        }
-//        try {
-//            accessor.updateOneHotelRecordColumnById("hotels", "hotel_name", "hotel3", 1);
-//        } catch (IOException | SQLException | ClassNotFoundException e){
-//            
-//        }
-//        List<Map<String, Object>> list;
-//        list = accessor.getAllHotelRecords("hotels");
-//        for (Map<String,Object> record : list){
-//            System.out.println(record.toString());
-//        }
-//        List<Map<String, Object>> list = accessor.getOneHotelRecordById(1, "hotels");
-//        for (Map<String,Object> record : list){
-//            System.out.println(record.toString());
-//        accessor.deleteHotelById(1);
-//        }
     }
 }

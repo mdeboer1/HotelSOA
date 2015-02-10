@@ -30,4 +30,7 @@ public interface HotelDAOStrategy {
     public abstract void addHotels(List<Hotel> list) throws IOException, SQLException,
             ClassNotFoundException;
     
+    public abstract void updateOneHotelRecordColumnById(String tableName,  
+            String columnToUpdate, String newValue, int hotelId)throws 
+            IOException, SQLException, ClassNotFoundException;
 }
