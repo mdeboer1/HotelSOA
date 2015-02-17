@@ -150,14 +150,35 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
     
     @Override
     public final void updateOneHotelRecordColumnById(String tableName,  
-            String columnToUpdate, String newValue, int hotelId)throws 
+            String newHotelName, String newHotelAddress, String newHotelCity,
+            String newHotelState, String newHotelZip, int hotelId) throws 
             IOException, SQLException, ClassNotFoundException{
         
         try {
-            database.updateOneHotelRecordColumnById(tableName, columnToUpdate, 
-                    newValue, hotelId);
+            database.updateOneHotelRecordColumnById(tableName, newHotelName, 
+                    newHotelAddress, newHotelCity, newHotelState, newHotelZip,
+                    hotelId);
         } catch (IOException | SQLException | ClassNotFoundException e){
             
         }
+    }
+    
+    public static void main(String[] args) {
+        HotelDAOStrategy s;
+        try {
+            s = new MySqlHotelReportDAO();
+            s.updateOneHotelRecordColumnById("hotels", "Anna's", "111 East Way", "Tosa", "WI", "53222", 2);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 }
