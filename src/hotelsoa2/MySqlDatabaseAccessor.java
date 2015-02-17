@@ -193,24 +193,35 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
     
     @Override
     public final void insertNewHotel(Hotel hotel) throws IOException, 
-            SQLException, ClassNotFoundException, BatchUpdateException{
+            SQLException, ClassNotFoundException {
         openConnection();
+        
+        PreparedStatement addHotel = null;
+        
+        String sqlStatement = "INSERT INTO hotels (hotel_name, hotel_address, "
+                    + "hotel_city, hotel_state, hotel_zip) values (?, ?, ?, ?, ?)";
+        
         try {
             connection.setAutoCommit(false);
-            statement = connection.createStatement();
-            
-            
-            statement.addBatch("INSERT INTO hotels (hotel_name, hotel_address, "
-                    + "hotel_city, hotel_state, hotel_zip) values ('"
-                    + hotel.getHotelName() + "', '" + hotel.getAddress() + "', '"
-                    + hotel.getCity() + "', '" + hotel.getState() + "', '" +
-                    hotel.getZip() + "')");
-            statement.executeBatch();
+            addHotel = connection.prepareStatement(sqlStatement);
+            addHotel.setString(1, hotel.getHotelName());
+            addHotel.setString(2, hotel.getAddress());
+            addHotel.setString(3, hotel.getCity());
+            addHotel.setString(4, hotel.getState());
+            addHotel.setString(5, hotel.getZip());
+            addHotel.executeUpdate();
             connection.commit();
-        } catch (BatchUpdateException b){
             
         } catch (SQLException e){
-            
+            if (connection != null){
+                System.out.println(connection);
+                try{
+                    System.out.println("Rolling back");
+                    connection.rollback();
+                } catch (SQLException s){
+                    
+                }
+            }
         } finally {
             if (statement != null) {
                 statement.close();
@@ -252,7 +263,9 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
     public static void main(String[] args) {
         DatabaseAccessorStrategy db = new MySqlDatabaseAccessor();
         try {
-            db.updateOneHotelRecordColumnById("hotels", "Mark's", "999 West Way", "Milwaukee", "WI", "53000", 1);
+            Hotel h = new Hotel(1, "Dave's", "222 North Dr", "Milwaukee", "WI", "53000");
+            db.insertNewHotel(h);
+//            db.updateOneHotelRecordColumnById("hotels", "Mark's", "999 West Way", "Milwaukee", "WI", "53000", 1);
         } catch (IOException | SQLException | ClassNotFoundException ex) {
             Logger.getLogger(MySqlDatabaseAccessor.class.getName()).log(Level.SEVERE, null, ex);
         }
