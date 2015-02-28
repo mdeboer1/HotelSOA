@@ -26,6 +26,10 @@ public interface DatabaseAccessorStrategy {
     public abstract void openConnection() throws IOException, 
             SQLException, ClassNotFoundException;
     
+    public abstract List<Map<String, Object>> getHotelRecordsByColumnName(String 
+            columnName, String recordToMatch) throws IOException, SQLException,
+            ClassNotFoundException;
+    
     public abstract void updateOneHotelRecordColumnById(String tableName,  
             String newHotelName, String newHotelAddress, String newHotelCity,
             String newHotelState, String newHotelZip, int hotelId) throws 

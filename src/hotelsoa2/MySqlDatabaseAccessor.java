@@ -55,6 +55,35 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
     }
     
     @Override
+    public final List<Map<String, Object>> getHotelRecordsByColumnName(String 
+            columnName, String recordToMatch) throws IOException, SQLException, ClassNotFoundException{
+        openConnection();
+        List<Map<String, Object>> hotelRecords = new ArrayList<>();
+        PreparedStatement stmt;
+        String sqlStatement = "select * from hotels where "
+                + columnName + " = ?";
+
+        connection.setAutoCommit(false);
+        stmt = connection.prepareStatement(sqlStatement);
+        stmt.setString(1, recordToMatch);
+        result = stmt.executeQuery();
+
+        ResultSetMetaData metaData = result.getMetaData();	
+        final int fields = metaData.getColumnCount();
+        
+        while (result.next()){
+            Map<String,Object> record = new LinkedHashMap<>();
+                for( int i=1; i <= fields; i++ ) {
+                    record.put( metaData.getColumnName(i), result.getObject(i) );
+                } // end for
+                hotelRecords.add(record);
+        }
+        connection.commit();
+        return hotelRecords;
+        }
+
+    
+    @Override
     public final List<Map<String, Object>> getAllHotelRecords(String tableName)
         throws SQLException, IOException, ClassNotFoundException {
         
@@ -235,17 +264,31 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
             throws IOException, SQLException, ClassNotFoundException,
             BatchUpdateException{
         openConnection();
+        
+        PreparedStatement addHotels = null;
+        String sqlStatement = "INSERT INTO hotels (hotel_name, hotel_address, hotel_city, hotel_state, hotel_zip) values (?, ?, ?, ?, ?)";
+//               sqlStatement = "INSERT INTO hotels (hotel_name, hotel_address, hotel_city, hotel_state, hotel_zip) values (?, ?, ?, ?, ?)";
         try {
             connection.setAutoCommit(false);
-            statement = connection.createStatement();
+            addHotels = connection.prepareStatement(sqlStatement);
             for (Map m : hotelList){
-                statement.addBatch("INSERT INTO hotels (hotel_name, hotel_address, "
-                    + "hotel_city, hotel_state, hotel_zip) values ('" + 
-                        m.get("hotel_name") + "', '" + m.get("hotel_address") +
-                        "', '" + m.get("hotel_city") + "', '" + m.get("hotel_state") 
-                        + "', '" + m.get("hotel_zip") + "')");
-            }
-            statement.executeBatch();
+                
+                addHotels.setObject(1, m.get("hotel_name").toString());
+                addHotels.setObject(2, m.get("hotel_address").toString());
+                addHotels.setObject(3, m.get("hotel_city").toString());
+                System.out.println(m.get("hotel_state").toString());
+                addHotels.setObject(4, m.get("hotel_state").toString());
+                System.out.println(m.get("hotel_zip").toString());
+                addHotels.setObject(5, m.get("hotel_zip").toString());
+                
+                addHotels.addBatch();
+//                statement.addBatch("INSERT INTO hotels (hotel_name, hotel_address, "
+//                    + "hotel_city, hotel_state, hotel_zip) values ('" + 
+//                        m.get("hotel_name") + "', '" + m.get("hotel_address") +
+//                        "', '" + m.get("hotel_city") + "', '" + m.get("hotel_state") 
+//                        + "', '" + m.get("hotel_zip") + "')");
+        }
+            addHotels.executeBatch();
             connection.commit();
         }catch (BatchUpdateException b){
             
@@ -260,14 +303,38 @@ public class MySqlDatabaseAccessor implements DatabaseAccessorStrategy {
             }
     }
     
+  
     public static void main(String[] args) {
         DatabaseAccessorStrategy db = new MySqlDatabaseAccessor();
+        List<Map<String, Object>> hotelRecords = null;
         try {
-            Hotel h = new Hotel(1, "Dave's", "222 North Dr", "Milwaukee", "WI", "53000");
-            db.insertNewHotel(h);
-//            db.updateOneHotelRecordColumnById("hotels", "Mark's", "999 West Way", "Milwaukee", "WI", "53000", 1);
+            String col = "hotel_city";
+            String rec = "Oconomowoc";
+            hotelRecords = db.getHotelRecordsByColumnName(col, rec);
         } catch (IOException | SQLException | ClassNotFoundException ex) {
             Logger.getLogger(MySqlDatabaseAccessor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        List<Hotel> list = new ArrayList<>();
+        for (Map<String,Object> map : hotelRecords){
+            Object obj = map.get("hotel_id");
+            String id = obj == null ? "Test" : obj.toString();
+            int hotelId = Integer.parseInt(id);
+            obj = map.get("hotel_name");
+            String hotelName = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_address");
+            String hotelAddress = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_city");
+            String hotelCity = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_state");
+            String hotelState = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_zip");
+            String hotelZip = obj == null ? "Test" : obj.toString();
+            Hotel hotel = new Hotel(hotelId, hotelName, hotelAddress, hotelCity,
+                    hotelState, hotelZip);
+            list.add(hotel);
+        }
+        for (Hotel h : list){
+            System.out.println(h.toString());
         }
     }
 }

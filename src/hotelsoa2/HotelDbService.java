@@ -8,6 +8,8 @@ package hotelsoa2;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -23,6 +25,17 @@ public class HotelDbService {
                 | IllegalAccessException ex){
             
         }
+    }
+    
+    public final List<Hotel> retrieveHotelsByColumnName(String columnName, String recordToMatch){
+        List<Hotel> records = null;
+        
+        try {
+            records = dao.requestHotelRecordsByColumn(columnName, recordToMatch);
+        } catch (IOException | SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(HotelDbService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return records;
     }
     
     public final List<Hotel> retrieveHotels(String tableName)throws 
@@ -88,5 +101,16 @@ public class HotelDbService {
 //        } catch (IOException | SQLException | ClassNotFoundException e)  {
 //            
 //        }  
+    }
+    
+    public static void main(String[] args) {
+        HotelDbService s = new HotelDbService();
+        
+        List<Hotel> list = null;
+        
+        list = s.retrieveHotelsByColumnName("hotel_city", "Waukesha");
+        for (Hotel h : list){
+            System.out.println(h.toString());
+        }
     }
 }

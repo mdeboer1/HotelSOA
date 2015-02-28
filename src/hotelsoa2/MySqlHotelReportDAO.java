@@ -40,6 +40,40 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
     }
     
     @Override
+    public final List<Hotel> requestHotelRecordsByColumn(String 
+            columnName, String recordToMatch) throws IOException, SQLException,
+            ClassNotFoundException {
+        List<Map<String, Object>> records = null;
+        
+        try {
+            records = database.getHotelRecordsByColumnName(columnName, recordToMatch);
+        } catch (IOException | SQLException | ClassNotFoundException ex) {
+            
+        }
+        
+        List<Hotel> list = new ArrayList<>();
+        for (Map<String,Object> map : records){
+            Object obj = map.get("hotel_id");
+            String id = obj == null ? "Test" : obj.toString();
+            int hotelId = Integer.parseInt(id);
+            obj = map.get("hotel_name");
+            String hotelName = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_address");
+            String hotelAddress = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_city");
+            String hotelCity = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_state");
+            String hotelState = obj == null ? "Test" : obj.toString();
+            obj = map.get("hotel_zip");
+            String hotelZip = obj == null ? "Test" : obj.toString();
+            Hotel hotel = new Hotel(hotelId, hotelName, hotelAddress, hotelCity,
+                    hotelState, hotelZip);
+            list.add(hotel);
+        }
+       return list;
+    }
+    
+    @Override
     public final List<Hotel> getHotelRecords(String tableName) throws 
             SQLException, IOException, ClassNotFoundException, NullPointerException{
         
@@ -137,7 +171,7 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
             map.put("hotel_address", hotel.getAddress());
             map.put("hotel_city", hotel.getCity());
             map.put("hotel_state", hotel.getState());
-            map.put("hotel_Zip", hotel.getZip());
+            map.put("hotel_zip", hotel.getZip());
             hotelList.add(map);
         }
 
@@ -164,21 +198,22 @@ public class MySqlHotelReportDAO implements HotelDAOStrategy {
     }
     
     public static void main(String[] args) {
-        HotelDAOStrategy s;
+        HotelDAOStrategy s = null;
         try {
             s = new MySqlHotelReportDAO();
-            s.updateOneHotelRecordColumnById("hotels", "Anna's", "111 East Way", "Tosa", "WI", "53222", 2);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
+            
+            List<Hotel> list = s.requestHotelRecordsByColumn("hotel_city", "Waukesha");
+            for (Hotel h : list){
+                System.out.println(h.toString());
+            }
+            
+ 
+            
+
+        } catch (IOException | SQLException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(MySqlHotelReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         
     }
 }
